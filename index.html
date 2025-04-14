@@ -12,8 +12,26 @@
       --secondary-hover: #0000CD;
       --background-color: #f9f9f9;
       --content-background: #fff;
+      --text-color: #333;
       --shadow: 0 4px 10px rgba(0,0,0,0.1);
       --border-radius: 10px;
+    }
+
+    /* Additional classes for advanced settings */
+    .no-animation * {
+      transition: none !important;
+    }
+    .compact .content {
+      padding: 1rem !important;
+      margin: 1rem auto !important;
+    }
+    /* New style for setting groups */
+    .setting-group {
+      border: 1px solid var(--primary-hover);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: var(--border-radius);
+      background: var(--content-background);
     }
 
     * {
@@ -21,30 +39,29 @@
       padding: 0;
       box-sizing: border-box;
     }
-
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: var(--background-color);
-      color: #333;
+      color: var(--text-color);
       line-height: 1.6;
+      transition: background-color 0.3s, color 0.3s;
     }
-
     header {
       background-color: var(--primary-color);
       color: white;
       padding: 2rem 1rem;
       text-align: center;
       box-shadow: var(--shadow);
+      transition: background-color 0.3s;
     }
-
     nav {
       background-color: var(--primary-color);
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
       box-shadow: var(--shadow);
+      transition: background-color 0.3s;
     }
-
     nav a {
       color: white;
       padding: 1rem;
@@ -52,11 +69,9 @@
       font-weight: bold;
       transition: background 0.3s ease;
     }
-
     nav a:hover {
       background-color: var(--primary-hover);
     }
-
     .content {
       max-width: 1000px;
       margin: 2rem auto;
@@ -64,57 +79,73 @@
       padding: 2rem;
       border-radius: var(--border-radius);
       box-shadow: var(--shadow);
+      transition: background-color 0.3s;
     }
-
     .button-container {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
       margin-top: 1rem;
     }
-
-    .game-button, .fullscreen-button {
+    .game-button {
       padding: 0.75rem 1.5rem;
       border: none;
       border-radius: var(--border-radius);
       font-size: 1rem;
       cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .game-button {
       background-color: var(--primary-color);
       color: white;
+      transition: background-color 0.3s ease;
     }
-
     .game-button:hover {
       background-color: var(--primary-hover);
     }
-
-    .fullscreen-button {
-      background-color: var(--secondary-color);
-      color: white;
-      margin-top: 1rem;
+    .iframe-container.fullscreen-mode {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: white;
+      z-index: 9999;
     }
-
-    .fullscreen-button:hover {
-      background-color: var(--secondary-hover);
-    }
-
-    .iframe-container {
-      margin-top: 2rem;
-      display: none;
-      background-color: white;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    iframe {
+    .iframe-container iframe {
       width: 100%;
-      height: 500px;
+      height: calc(100% - 40px);
       border: none;
+    }
+    .back-button {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 0.5rem 1rem;
+      background: #ccc;
+      border: none;
+      border-radius: var(--border-radius);
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 10000;
+    }
+    .form-popup {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      border-radius: var(--border-radius);
+    }
+    .form-popup input {
       display: block;
+      margin-bottom: 1rem;
+      width: 100%;
+      padding: 0.5rem;
+    }
+    .form-popup button {
+      margin-right: 1rem;
     }
   </style>
 </head>
@@ -123,126 +154,493 @@
     <h1>Free Trigonometry²</h1>
     <p>Learn and play with trigonometry!</p>
   </header>
-
   <nav>
     <a href="#home" onclick="showPage('home', event)">Home</a>
     <a href="#about" onclick="showPage('about', event)">About</a>
     <a href="#games" onclick="showPage('games', event)">Games</a>
     <a href="#extra" onclick="showPage('extra', event)">Extra</a>
+    <a href="#settings" onclick="showPage('settings', event)">Settings</a>
   </nav>
-
   <div class="content" id="home">
     <h2>Welcome to Free Trigonometry²!</h2>
     <p>This website offers fun and interactive ways to learn trigonometry. Use the navigation bar to learn more or to start playing educational games.</p>
   </div>
-
   <div class="content" id="about" style="display:none;">
     <h2>About</h2>
-    <p>Free Trigonometry is a resource developed to make learning trigonometric concepts engaging and accessible. Whether you're a student or just curious, our games and guides are designed to help you explore the world of triangles, angles, and functions in a fun way.</p>
+    <p>Free Trigonometry is a resource developed to make learning trigonometric concepts engaging and accessible.</p>
   </div>
-
   <div class="content" id="games" style="display:none;">
     <h2>Games</h2>
     <p>Click a game to load and play it below:</p>
     <div class="button-container">
-      <button class="game-button" onclick="showGame('game1')">N-GON</button>
-      <button class="game-button" onclick="showGame('game2')">Deadshot</button>
-      <button class="game-button" onclick="showGame('game3')">Netquel</button>
-      <button class="game-button" onclick="showGame('game4')">MK48</button>
-      <button class="game-button" onclick="showGame('game5')">TankGank</button>
-      <button class="game-button" onclick="showGame('game6')">Ships 3D</button>
+      <button class="game-button" onclick="openCustomGame('https://landgreen.github.io/n-gon/')">N-GON</button>
+      <button class="game-button" onclick="openCustomGame('https://deadshot.io/')">Deadshot</button>
+      <button class="game-button" onclick="openCustomGame('https://netquel.com/')">Netquel</button>
+      <button class="game-button" onclick="openCustomGame('https://mk48.io/')">MK48</button>
+      <button class="game-button" onclick="openCustomGame('https://tankgank.com/')">TankGank</button>
+      <button class="game-button" onclick="openCustomGame('https://yp3d.com/ships3d/')">Ships 3D</button>
     </div>
-
-    <div id="game1" class="iframe-container">
-      <h3>N-GON</h3>
-      <iframe id="iframe1" data-src="https://landgreen.github.io/n-gon/"></iframe>
-      <button class="fullscreen-button" onclick="toggleFullscreen('game1')">Go Fullscreen</button>
-    </div>
-    <div id="game2" class="iframe-container">
-      <h3>Deadshot</h3>
-      <iframe id="iframe2" data-src="https://deadshot.io/"></iframe>
-      <button class="fullscreen-button" onclick="toggleFullscreen('game2')">Go Fullscreen</button>
-    </div>
-    <div id="game3" class="iframe-container">
-      <h3>Netquel</h3>
-      <iframe id="iframe3" data-src="https://netquel.com/"></iframe>
-      <button class="fullscreen-button" onclick="toggleFullscreen('game3')">Go Fullscreen</button>
-    </div>
-    <div id="game4" class="iframe-container">
-      <h3>MK48</h3>
-      <iframe id="iframe4" data-src="https://mk48.io/"></iframe>
-      <button class="fullscreen-button" onclick="toggleFullscreen('game4')">Go Fullscreen</button>
-    </div>
-    <div id="game5" class="iframe-container">
-      <h3>TankGank</h3>
-      <iframe id="iframe5" data-src="https://tankgank.com/"></iframe>
-      <button class="fullscreen-button" onclick="toggleFullscreen('game5')">Go Fullscreen</button>
-    </div>
-    <div id="game6" class="iframe-container">
-      <h3>Ships 3D</h3>
-      <iframe id="iframe6" data-src="https://yp3d.com/ships3d/"></iframe>
-      <button class="fullscreen-button" onclick="toggleFullscreen('game6')">Go Fullscreen</button>
-    </div>
+    <h3>Your Custom Games</h3>
+    <div id="customGames" class="button-container"></div>
+    <button id="addGameBtn" class="game-button">+ Add Game</button>
   </div>
-
   <div class="content" id="extra" style="display:none;">
     <h2>Extra</h2>
     <p>This page contains additional resources, tips, and tutorials related to trigonometry!</p>
     <div class="button-container">
-      <button class="game-button" onclick="loadExtraIframe()">Proxy</button>
-    </div>
-    <div id="extra-content" class="iframe-container">
-      <h3>Extra Content</h3>
-      <iframe id="extra-iframe" data-src="https://hw.billigerhost.com/settings"></iframe>
-      <button class="fullscreen-button" onclick="toggleFullscreen('extra-content')">Go Fullscreen</button>
+      <button class="game-button" onclick="loadExtraIframe()">Math Portal</button>
     </div>
   </div>
-
+  <div class="content" id="settings" style="display:none;">
+    <h2>Settings</h2>
+    <div class="setting-group">
+      <h3>Color Presets</h3>
+      <div class="button-container">
+        <button class="game-button" onclick="applyPreset('redWhite')">Red &amp; White (Default)</button>
+        <button class="game-button" onclick="applyPreset('blueWhite')">Blue &amp; White</button>
+        <button class="game-button" onclick="applyPreset('dark')">Dark Mode</button>
+        <button class="game-button" onclick="applyPreset('greenWhite')">Green &amp; White</button>
+        <button class="game-button" onclick="applyPreset('purpleWhite')">Purple &amp; White</button>
+        <button class="game-button" onclick="applyPreset('orangeWhite')">Orange &amp; White</button>
+        <button class="game-button" onclick="applyPreset('highContrast')">High Contrast</button>
+        <button class="game-button" onclick="applyPreset('pastel')">Pastel</button>
+        <button class="game-button" onclick="applyPreset('cosmic')">Cosmic</button>
+        <button class="game-button" onclick="applyPreset('vintage')">Vintage</button>
+      </div>
+    </div>
+    <div class="setting-group">
+      <h3>Font Selection</h3>
+      <select id="fontSelect">
+        <option value="Segoe UI">Segoe UI</option>
+        <option value="Arial, sans-serif">Arial</option>
+        <option value="Times New Roman, serif">Times New Roman</option>
+        <option value="Roboto, sans-serif">Roboto</option>
+        <option value="Lato, sans-serif">Lato</option>
+        <option value="Montserrat, sans-serif">Montserrat</option>
+      </select>
+    </div>
+    <div class="setting-group">
+      <h3>Animation Preferences</h3>
+      <label><input type="checkbox" id="disableAnimations" /> Disable Animations</label>
+    </div>
+    <div class="setting-group">
+      <h3>Layout Adjustments</h3>
+      <label><input type="checkbox" id="compactLayout" /> Compact Layout</label>
+    </div>
+    <div class="setting-group">
+      <h3>Background Customization</h3>
+      <label for="bgSelect">Background Style:</label>
+      <select id="bgSelect">
+        <option value="default">Default</option>
+        <option value="customImage">Custom Image</option>
+      </select>
+      <div id="bgUrlContainer" style="display:none; margin-top:0.5rem;">
+        <input type="text" id="bgUrl" placeholder="Image URL (https://...)" />
+      </div>
+    </div>
+    <div class="setting-group">
+      <h3>Accessibility Options</h3>
+      <label for="textSizeSelect">Text Size:</label>
+      <select id="textSizeSelect">
+        <option value="14px">Small</option>
+        <option value="16px" selected>Medium</option>
+        <option value="18px">Large</option>
+        <option value="20px">Extra Large</option>
+      </select>
+    </div>
+    <div class="setting-group">
+      <h3>Custom Shortcuts</h3>
+      <label>Home: <input type="text" id="shortcutHome" maxlength="1" /></label><br>
+      <label>About: <input type="text" id="shortcutAbout" maxlength="1" /></label><br>
+      <label>Games: <input type="text" id="shortcutGames" maxlength="1" /></label><br>
+      <label>Extra: <input type="text" id="shortcutExtra" maxlength="1" /></label><br>
+      <label>Settings: <input type="text" id="shortcutSettings" maxlength="1" /></label><br>
+      <button id="saveShortcutsBtn" class="game-button">Save Shortcuts</button>
+    </div>
+    <div class="setting-group">
+      <h3>Reset Settings</h3>
+      <button id="resetSettingsBtn" class="game-button">Reset to Default</button>
+    </div>
+  </div>
+  <div id="customIframe" class="iframe-container fullscreen-mode" style="display:none;">
+    <button class="back-button" onclick="closeCustomGame()">← Back</button>
+    <iframe></iframe>
+  </div>
+  <div id="gameForm" class="form-popup">
+    <input id="gameName" placeholder="Game name">
+    <input id="gameUrl" placeholder="Game URL (https://...)" >
+    <button onclick="saveGame()">Save</button>
+    <button onclick="closeForm()">Cancel</button>
+  </div>
   <script>
+    // 10 Color Presets with text color included.
+    const presets = {
+      redWhite: {
+        '--primary-color': '#8B0000',
+        '--primary-hover': '#a52a2a',
+        '--secondary-color': '#00008B',
+        '--secondary-hover': '#0000CD',
+        '--background-color': '#ffffff',
+        '--content-background': '#fff',
+        '--text-color': '#333'
+      },
+      blueWhite: {
+        '--primary-color': '#00008B',
+        '--primary-hover': '#0000CD',
+        '--secondary-color': '#8B0000',
+        '--secondary-hover': '#a52a2a',
+        '--background-color': '#ffffff',
+        '--content-background': '#fff',
+        '--text-color': '#333'
+      },
+      dark: {
+        '--primary-color': '#333333',
+        '--primary-hover': '#444444',
+        '--secondary-color': '#666666',
+        '--secondary-hover': '#777777',
+        '--background-color': '#000000',
+        '--content-background': '#222222',
+        '--text-color': '#ffffff'
+      },
+      greenWhite: {
+        '--primary-color': '#006400',
+        '--primary-hover': '#228B22',
+        '--secondary-color': '#8B0000',
+        '--secondary-hover': '#a52a2a',
+        '--background-color': '#ffffff',
+        '--content-background': '#fff',
+        '--text-color': '#333'
+      },
+      purpleWhite: {
+        '--primary-color': '#4B0082',
+        '--primary-hover': '#800080',
+        '--secondary-color': '#FFD700',
+        '--secondary-hover': '#FFC107',
+        '--background-color': '#ffffff',
+        '--content-background': '#fff',
+        '--text-color': '#333'
+      },
+      orangeWhite: {
+        '--primary-color': '#FF8C00',
+        '--primary-hover': '#FFA500',
+        '--secondary-color': '#00008B',
+        '--secondary-hover': '#0000CD',
+        '--background-color': '#ffffff',
+        '--content-background': '#fff',
+        '--text-color': '#333'
+      },
+      highContrast: {
+        '--primary-color': '#000000',
+        '--primary-hover': '#111111',
+        '--secondary-color': '#ffffff',
+        '--secondary-hover': '#dddddd',
+        '--background-color': '#000000',
+        '--content-background': '#222222',
+        '--text-color': '#ffffff'
+      },
+      pastel: {
+        '--primary-color': '#AEC6CF',
+        '--primary-hover': '#BFD7EA',
+        '--secondary-color': '#FFB347',
+        '--secondary-hover': '#FFD1A9',
+        '--background-color': '#fffaf0',
+        '--content-background': '#ffffff',
+        '--text-color': '#333'
+      },
+      cosmic: {
+        '--primary-color': '#2E2B5F',
+        '--primary-hover': '#474062',
+        '--secondary-color': '#8A2BE2',
+        '--secondary-hover': '#9370DB',
+        '--background-color': '#000000',
+        '--content-background': '#1C1C1C',
+        '--text-color': '#ffffff'
+      },
+      vintage: {
+        '--primary-color': '#704214',
+        '--primary-hover': '#8B4513',
+        '--secondary-color': '#C0A080',
+        '--secondary-hover': '#D2B48C',
+        '--background-color': '#F5F5DC',
+        '--content-background': '#fffaf0',
+        '--text-color': '#333'
+      }
+    };
+
+    function applyPreset(presetName) {
+      const preset = presets[presetName];
+      for (const variable in preset) {
+        document.documentElement.style.setProperty(variable, preset[variable]);
+      }
+      localStorage.setItem('colorPreset', presetName);
+    }
+
+    function loadPreset() {
+      const savedPreset = localStorage.getItem('colorPreset');
+      if (savedPreset && presets[savedPreset]) {
+        applyPreset(savedPreset);
+      }
+    }
+
+    // Updated showPage to hide popups.
     function showPage(pageId, event) {
       if (event) event.preventDefault();
-      ['home', 'about', 'games', 'extra'].forEach(id => {
+      ['home', 'about', 'games', 'extra', 'settings'].forEach(id => {
         document.getElementById(id).style.display = 'none';
       });
+      document.getElementById('customIframe').style.display = 'none';
+      document.getElementById('gameForm').style.display = 'none';
       document.getElementById(pageId).style.display = 'block';
     }
 
-    function showGame(gameId) {
-      ['game1', 'game2', 'game3', 'game4', 'game5', 'game6'].forEach(id => {
-        document.getElementById(id).style.display = 'none';
-      });
-      ['iframe1', 'iframe2', 'iframe3', 'iframe4', 'iframe5', 'iframe6'].forEach(id => {
-        const iframe = document.getElementById(id);
-        iframe.src = '';
-      });
-      document.getElementById(gameId).style.display = 'block';
-      const iframeId = 'iframe' + gameId.charAt(gameId.length - 1);
-      const iframe = document.getElementById(iframeId);
-      iframe.src = iframe.getAttribute('data-src');
+    function openCustomGame(url) {
+      document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
+      document.getElementById('customIframe').style.display = 'block';
+      document.querySelector('#customIframe iframe').src = url;
     }
 
+    function closeCustomGame() {
+      document.querySelector('#customIframe iframe').src = '';
+      document.getElementById('customIframe').style.display = 'none';
+      document.getElementById('games').style.display = 'block';
+    }
+
+    function openForm() {
+      document.getElementById('gameForm').style.display = 'block';
+    }
+
+    function closeForm() {
+      document.getElementById('gameForm').style.display = 'none';
+    }
+
+    function saveGame() {
+      const name = document.getElementById('gameName').value.trim();
+      const url = document.getElementById('gameUrl').value.trim();
+      if (!name || !url.startsWith('https://')) {
+        alert('Please enter a valid name and a URL starting with https://');
+        return;
+      }
+      const games = JSON.parse(localStorage.getItem('customGames') || '[]');
+      games.push({ name, url });
+      localStorage.setItem('customGames', JSON.stringify(games));
+      closeForm();
+      loadCustomGames();
+    }
+
+    function loadCustomGames() {
+      const games = JSON.parse(localStorage.getItem('customGames') || '[]');
+      const container = document.getElementById('customGames');
+      container.innerHTML = '';
+      games.forEach((game, index) => {
+        const wrapper = document.createElement('div');
+        const btn = document.createElement('button');
+        btn.className = 'game-button';
+        btn.textContent = game.name;
+        btn.onclick = () => openCustomGame(game.url);
+        const del = document.createElement('button');
+        del.textContent = '🗑';
+        del.style.marginLeft = '5px';
+        del.onclick = () => {
+          games.splice(index, 1);
+          localStorage.setItem('customGames', JSON.stringify(games));
+          loadCustomGames();
+        };
+        wrapper.appendChild(btn);
+        wrapper.appendChild(del);
+        container.appendChild(wrapper);
+      });
+    }
+
+    // loadExtraIframe opens Math Portal in a new window.
     function loadExtraIframe() {
       const newWindow = window.open('about:blank');
       const iframe = document.createElement('iframe');
       iframe.style.width = '100%';
       iframe.style.height = '100vh';
+      iframe.style.border = 'none';
       iframe.src = 'https://hw.billigerhost.com/settings';
+      newWindow.document.body.style.margin = 0;
       newWindow.document.body.appendChild(iframe);
     }
 
-    function toggleFullscreen(containerId) {
-      const iframe = document.getElementById(containerId).querySelector('iframe');
-      if (iframe.requestFullscreen) iframe.requestFullscreen();
-      else if (iframe.mozRequestFullScreen) iframe.mozRequestFullScreen();
-      else if (iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
-      else if (iframe.msRequestFullscreen) iframe.msRequestFullscreen();
+    // Advanced Settings – Font Selection
+    const fontSelect = document.getElementById('fontSelect');
+    fontSelect.addEventListener('change', function() {
+      document.body.style.fontFamily = this.value;
+      localStorage.setItem('settingsFont', this.value);
+    });
+    function loadFontSetting() {
+      const savedFont = localStorage.getItem('settingsFont');
+      if (savedFont) {
+        fontSelect.value = savedFont;
+        document.body.style.fontFamily = savedFont;
+      }
     }
 
-    window.onload = () => showPage('home');
+    // Animation Preferences
+    const disableAnimationsCheckbox = document.getElementById('disableAnimations');
+    disableAnimationsCheckbox.addEventListener('change', function() {
+      if (this.checked) {
+        document.body.classList.add('no-animation');
+        localStorage.setItem('settingsDisableAnimations', 'true');
+      } else {
+        document.body.classList.remove('no-animation');
+        localStorage.setItem('settingsDisableAnimations', 'false');
+      }
+    });
+    function loadAnimationSetting() {
+      const animSetting = localStorage.getItem('settingsDisableAnimations');
+      if (animSetting === 'true') {
+        disableAnimationsCheckbox.checked = true;
+        document.body.classList.add('no-animation');
+      }
+    }
+
+    // Layout Adjustments
+    const compactLayoutCheckbox = document.getElementById('compactLayout');
+    compactLayoutCheckbox.addEventListener('change', function() {
+      if (this.checked) {
+        document.body.classList.add('compact');
+        localStorage.setItem('settingsCompactLayout', 'true');
+      } else {
+        document.body.classList.remove('compact');
+        localStorage.setItem('settingsCompactLayout', 'false');
+      }
+    });
+    function loadLayoutSetting() {
+      const layoutSetting = localStorage.getItem('settingsCompactLayout');
+      if (layoutSetting === 'true') {
+        compactLayoutCheckbox.checked = true;
+        document.body.classList.add('compact');
+      }
+    }
+
+    // Background Customization
+    const bgSelect = document.getElementById('bgSelect');
+    const bgUrlContainer = document.getElementById('bgUrlContainer');
+    const bgUrlInput = document.getElementById('bgUrl');
+    bgSelect.addEventListener('change', function() {
+      localStorage.setItem('settingsBgStyle', this.value);
+      if (this.value === 'customImage') {
+        bgUrlContainer.style.display = 'block';
+        if (bgUrlInput.value.trim() !== '') {
+          document.body.style.backgroundImage = `url(${bgUrlInput.value.trim()})`;
+          localStorage.setItem('settingsBgUrl', bgUrlInput.value.trim());
+        }
+      } else {
+        bgUrlContainer.style.display = 'none';
+        document.body.style.backgroundImage = '';
+        localStorage.removeItem('settingsBgUrl');
+      }
+    });
+    bgUrlInput.addEventListener('change', function() {
+      const url = this.value.trim();
+      if (url !== '' && url.startsWith('https://')) {
+        document.body.style.backgroundImage = `url(${url})`;
+        localStorage.setItem('settingsBgUrl', url);
+      }
+    });
+    function loadBgSetting() {
+      const bgStyle = localStorage.getItem('settingsBgStyle');
+      if (bgStyle) {
+        bgSelect.value = bgStyle;
+        if (bgStyle === 'customImage') {
+          bgUrlContainer.style.display = 'block';
+          const savedUrl = localStorage.getItem('settingsBgUrl');
+          if (savedUrl) {
+            bgUrlInput.value = savedUrl;
+            document.body.style.backgroundImage = `url(${savedUrl})`;
+          }
+        }
+      }
+    }
+
+    // Accessibility Options – Text Size
+    const textSizeSelect = document.getElementById('textSizeSelect');
+    textSizeSelect.addEventListener('change', function() {
+      document.documentElement.style.fontSize = this.value;
+      localStorage.setItem('settingsTextSize', this.value);
+    });
+    function loadTextSizeSetting() {
+      const savedSize = localStorage.getItem('settingsTextSize');
+      if (savedSize) {
+        textSizeSelect.value = savedSize;
+        document.documentElement.style.fontSize = savedSize;
+      }
+    }
+
+    // Custom Shortcuts
+    const shortcutHome = document.getElementById('shortcutHome');
+    const shortcutAbout = document.getElementById('shortcutAbout');
+    const shortcutGames = document.getElementById('shortcutGames');
+    const shortcutExtra = document.getElementById('shortcutExtra');
+    const shortcutSettings = document.getElementById('shortcutSettings');
+    document.getElementById('saveShortcutsBtn').addEventListener('click', function() {
+      localStorage.setItem('shortcutHome', shortcutHome.value.toLowerCase());
+      localStorage.setItem('shortcutAbout', shortcutAbout.value.toLowerCase());
+      localStorage.setItem('shortcutGames', shortcutGames.value.toLowerCase());
+      localStorage.setItem('shortcutExtra', shortcutExtra.value.toLowerCase());
+      localStorage.setItem('shortcutSettings', shortcutSettings.value.toLowerCase());
+      alert('Shortcuts saved!');
+    });
+    function loadShortcuts() {
+      shortcutHome.value = localStorage.getItem('shortcutHome') || '';
+      shortcutAbout.value = localStorage.getItem('shortcutAbout') || '';
+      shortcutGames.value = localStorage.getItem('shortcutGames') || '';
+      shortcutExtra.value = localStorage.getItem('shortcutExtra') || '';
+      shortcutSettings.value = localStorage.getItem('shortcutSettings') || '';
+    }
+    // Listen for keydown events to trigger custom shortcuts.
+    document.addEventListener('keydown', function(event) {
+      const key = event.key.toLowerCase();
+      if (key === localStorage.getItem('shortcutHome')) {
+        showPage('home');
+      } else if (key === localStorage.getItem('shortcutAbout')) {
+        showPage('about');
+      } else if (key === localStorage.getItem('shortcutGames')) {
+        showPage('games');
+      } else if (key === localStorage.getItem('shortcutExtra')) {
+        showPage('extra');
+      } else if (key === localStorage.getItem('shortcutSettings')) {
+        showPage('settings');
+      }
+    });
+
+    // Reset Settings Button
+    document.getElementById('resetSettingsBtn').addEventListener('click', function() {
+      if (confirm('Reset all settings to default?')) {
+        localStorage.removeItem('colorPreset');
+        localStorage.removeItem('settingsFont');
+        localStorage.removeItem('settingsDisableAnimations');
+        localStorage.removeItem('settingsCompactLayout');
+        localStorage.removeItem('settingsBgStyle');
+        localStorage.removeItem('settingsBgUrl');
+        localStorage.removeItem('settingsTextSize');
+        localStorage.removeItem('shortcutHome');
+        localStorage.removeItem('shortcutAbout');
+        localStorage.removeItem('shortcutGames');
+        localStorage.removeItem('shortcutExtra');
+        localStorage.removeItem('shortcutSettings');
+        location.reload();
+      }
+    });
+
+    document.getElementById('addGameBtn').addEventListener('click', openForm);
+
+    window.onload = () => {
+      showPage('home');
+      loadCustomGames();
+      loadPreset();
+      loadFontSetting();
+      loadAnimationSetting();
+      loadLayoutSetting();
+      loadBgSetting();
+      loadTextSizeSetting();
+      loadShortcuts();
+    };
   </script>
 </body>
 </html>
-
 
 
 
