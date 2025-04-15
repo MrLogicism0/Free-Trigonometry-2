@@ -111,7 +111,7 @@
     }
     .iframe-container iframe {
       width: 100%;
-      height: calc(100% - 40px);
+      height: 100%; /* Changed from calc(100% - 40px) to 100% */
       border: none;
     }
     .back-button {
@@ -638,6 +638,13 @@
       loadTextSizeSetting();
       loadShortcuts();
     };
+    // Prevent user from leaving the page without confirmation
+    window.addEventListener('beforeunload', function (event) {
+      const confirmationMessage = "Are you sure you want to leave? Any unsaved changes will be lost.";
+      event.returnValue = confirmationMessage;
+      return confirmationMessage;
+    });
+
   </script>
 </body>
 </html>
